@@ -10,6 +10,7 @@
 		8E95CDCE1FB92883009B1BF5 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E95CDCD1FB92883009B1BF5 /* main.cpp */; };
 		8E95CDD61FB92D53009B1BF5 /* libmysqlclient.20.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E95CDD51FB92D53009B1BF5 /* libmysqlclient.20.dylib */; };
 		8E95CDDA1FB931D5009B1BF5 /* mysqlmanager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E95CDD91FB931D5009B1BF5 /* mysqlmanager.cpp */; };
+		E5A18B8B1FBBDD1A00DB158F /* view.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5A18B891FBBDD1A00DB158F /* view.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -30,6 +31,8 @@
 		8E95CDD51FB92D53009B1BF5 /* libmysqlclient.20.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libmysqlclient.20.dylib; sourceTree = "<group>"; };
 		8E95CDD81FB93196009B1BF5 /* mysqlmanager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mysqlmanager.h; sourceTree = "<group>"; };
 		8E95CDD91FB931D5009B1BF5 /* mysqlmanager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mysqlmanager.cpp; sourceTree = "<group>"; };
+		E5A18B891FBBDD1A00DB158F /* view.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = view.cpp; sourceTree = "<group>"; };
+		E5A18B8A1FBBDD1A00DB158F /* view.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = view.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +70,8 @@
 				8E95CDCD1FB92883009B1BF5 /* main.cpp */,
 				8E95CDD81FB93196009B1BF5 /* mysqlmanager.h */,
 				8E95CDD91FB931D5009B1BF5 /* mysqlmanager.cpp */,
+				E5A18B891FBBDD1A00DB158F /* view.cpp */,
+				E5A18B8A1FBBDD1A00DB158F /* view.hpp */,
 			);
 			path = program_experiment;
 			sourceTree = "<group>";
@@ -138,6 +143,7 @@
 			files = (
 				8E95CDDA1FB931D5009B1BF5 /* mysqlmanager.cpp in Sources */,
 				8E95CDCE1FB92883009B1BF5 /* main.cpp in Sources */,
+				E5A18B8B1FBBDD1A00DB158F /* view.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -315,6 +321,7 @@
 				8E95CDD31FB92883009B1BF5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
