@@ -7,7 +7,12 @@ entry
 
     Car car 
     
-    input => car => mysql
+    input => (car) {
+        car.number.length <= 8
+        car.model (car, truck, no-motor)
+        
+        parking.rate => { (car.model), (rate) }
+    }   
 
     change state
 
@@ -26,4 +31,13 @@ clear
 
     return left
 
+search
+
+    (id) => { car.data }
+    
+    (all) => for (let item of cars) {
+        return item.data
+    }
+
+    
 end
