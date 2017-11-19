@@ -6,7 +6,7 @@
 //  Copyright © 2017年 李成禹. All rights reserved.
 //
 
-#include "view.hpp"
+#include "view.h"
 #include <iostream>
 using namespace std;
 

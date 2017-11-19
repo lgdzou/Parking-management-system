@@ -6,7 +6,7 @@
 //  Copyright © 2017 李成禹. All rights reserved.
 //
 
-#include "MySQLManager.h"
+#include "mysqlmanager.h"
 
 MySQLManager::MySQLManager(string hosts, string userName, string password, string dbName, unsigned int port)
 {
