@@ -28,7 +28,7 @@
 //}
 
 #include "mysqlmanager.h"
-
+#include <cstdlib>
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -88,10 +88,13 @@ int main()
     if(mysql->getConnectionStatus())
         
     {
-        cout << "连接成功" << endl;
-        
-        char username;
-        char password;
+
+        cout << "数据库连接成功" << endl;
+        string admin;
+        string temp[1];
+        string admin_pw;
+        string username;
+        string password;
         string method;
         time_t t = time(0);
         struct tm *p;
@@ -101,68 +104,93 @@ int main()
         printf("%ld: %s\n", (long)t, s);
         
         
-        if(mysql->runSQLCommand("select * from parking.admin")) {
-            cout << "Please input your username: ";
-            cin >> username;
-            cout << "Please input your password: ";
-            cin >> password;
-            
-            vector<vector<std::string>> result = mysql->getResult();
-            for(auto & vec : result) {
-                for (auto &str : vec) {
-                    if ()
-                }
-            }
-        };
-    
-        
-        if (password == 666666) {
-            for (int k = 0; k < 100; k++) {
-                
-                cout << "Please input entry or claer" << endl;
-                cin >> method;
-                if (method == "entry") {
-                    double left[10] = {1,2,3,4,5,6,7,8,9,10};
-                    cout << "剩余车位 ：";
-                    for (int i = 0; i < 10; i++) {
-                        if (i == 9) {
-                            cout << left[i] << endl;
-                        }
-                        else
-                            cout << left[i] << ",";
+        if(mysql->runSQLCommand("select username from parking.admin")) {
+            vector<vector<std::string> > result = mysql->getResult();
+            for(auto & vec : result)
+            {
+                for(auto &str : vec) {
+//                    cout <<str.length()<<endl;
+                    cout << "Please input your username: ";
+                    cin >> username;
+                    admin = str.c_str();
+                    if(username.compare(admin)==0)
+                    {
+                        mysql->clearResult();
+                        break;
                     }
-                    
-                    Car car;
-                    car.get_id();
-                    car.get_time(t, s);
-                    car.get_number();
-                    car.get_model();
-                    car.change_state();
-                    
+                    else {
+                        cout << "Please input the true username";
+                        return 0;
+                    }
+    
+            
+        }
+            if(mysql->runSQLCommand("select password from parking.admin")) {
+                vector<vector<std::string> > result = mysql->getResult();
+                for(auto & vec : result)
+                {
+                    for(auto &str : vec) {
+                        admin_pw = str.c_str();
+//                        cout << admin_pw<<endl;
+                        cout << "Please input your password: ";
+                        cin >> password;
+                        if(password.compare(admin_pw)==0)
+                        {
+                            for (int k = 0; k < 100; k++) {
+                                
+                                cout << "Please input your choice:\n1.存车\n2.取车" << endl;
+                                cin >> method;
+                                if (method == "1") {
+                                    double left[10] = {1,2,3,4,5,6,7,8,9,10};
+                                    cout << "剩余车位 ：";
+                                    for (int i = 0; i < 10; i++) {
+                                        if (i == 9) {
+                                            cout << left[i] << endl;
+                                        }
+                                        else
+                                            cout << left[i] << ",";
+                                    }
+                                    
+                                    Car car;
+                                    car.get_id();
+                                    car.get_time(t, s);
+                                    car.get_number();
+                                    car.get_model();
+                                    car.change_state();
+                                    
+                                }
+                                
+                                else if (method == "2") {
+                                    time_t entry_time = 1510630398;
+                                    
+                                    Parting space;
+                                    double last_time = space.get_time(t, s);
+                                    double time_difference = last_time - entry_time;
+                                    double total = (time_difference/60) * space.rate;
+                                    
+                                    space.state = true;
+                                    space.change_state();
+                                    cout << "Total:" << total << endl;
+                                }
+                                
+                                else
+                                    cout << "Error" << endl;
+                            }
+                        }
+                        else {
+                            cout << "Please input the true password";
+                        }
+                        
+                    }
                 }
                 
-                else if (method == "clear") {
-                    time_t entry_time = 1510630398;
-                    
-                    Parting space;
-                    double last_time = space.get_time(t, s);
-                    double time_difference = last_time - entry_time;
-                    double total = (time_difference/60) * space.rate;
-                    
-                    space.state = true;
-                    space.change_state();
-                    cout << "Total:" << total << endl;
-                }
-                
-                else
-                    cout << "Error" << endl;
             }
+            
         }
-        else {
-            cout << "Please input the true password";
-        }
-        
     }
     else
-        cout << "连接未建立" << endl;
+    {
+        cout << "连接未建立！"<<endl;
+    }
+}
 }

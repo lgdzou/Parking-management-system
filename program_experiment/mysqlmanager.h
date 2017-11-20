@@ -50,6 +50,7 @@ class MySQLManager
      * @param mysql                MySQL object
      */
     void destroyConnection();
+    void clearResult();
     bool getConnectionStatus();
     vector< vector<string> > getResult();
     protected:

@@ -148,7 +148,6 @@ bool MySQLManager::runSQLCommand(string sql)
         this ->resultList.push_back(objectValue);
     }
     mysql_free_result(res);         //free result after you get the result
-    
     return true;
 }
 
@@ -185,7 +184,10 @@ void MySQLManager::destroyConnection()
     mysql_close(&mySQLClient);
     this ->IsConnected = false;
 }
-
+void MySQLManager::clearResult()
+{
+    resultList.clear();
+}
 bool MySQLManager::getConnectionStatus()
 {
     return IsConnected;
