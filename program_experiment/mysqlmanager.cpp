@@ -7,6 +7,9 @@
 //
 
 #include "mysqlmanager.h"
+#include <cstring>
+#include <iostream>
+using namespace std;
 
 MySQLManager::MySQLManager(string hosts, string userName, string password, string dbName, unsigned int port)
 {
@@ -150,8 +153,38 @@ bool MySQLManager::runSQLCommand(string sql)
     mysql_free_result(res);         //free result after you get the result
     return true;
 }
-
-unsigned int MySQLManager::insert(std::string sql)
+string MySQLManager::getData(std::string car_num){
+    string sql_pre;
+    string park_id;
+    string park_rate;
+    string time;
+    string car_model;
+    sql_pre = "select * from park where car_number=" + car_num;
+    MySQLManager::runSQLCommand(sql_pre);
+    vector<vector<std::string> > result = MySQLManager::getResult();
+    for(auto & vec : result)
+    {
+//        for(auto &str : vec) {
+//            data = str.c_str();
+//        }
+        park_id=vec[0];
+        MySQLManager::clearResult();
+        park_rate=vec[2];
+        MySQLManager::clearResult();
+        car_model=vec[4];
+        MySQLManager::clearResult();
+        time=vec[5];
+    }
+    return park_id,park_rate,car_model,time;
+}
+signed int MySQLManager::updateData(std::string park_id,std::string park_state,std::string car_number,std::string car_model)
+{
+    unsigned int flag;
+    sqlupdate = "update park SET park_state=" + park_state + ",car_number=" +car_number+",car_model="+car_model+" where park_id="+park_id;
+    flag = MySQLManager::insert(sqlupdate);
+    return flag;
+}
+signed int MySQLManager::insert(std::string sql)
 {
     if(!IsConnected) {
         cout << "" << endl;
@@ -163,13 +196,14 @@ unsigned int MySQLManager::insert(std::string sql)
     }
     int rows = -1;
     int res = mysql_query(&mySQLClient, sql.c_str());
-    if(res >= 0){
+    rows = mysql_affected_rows(&mySQLClient);
+    if(res >= 0 && rows>=1){
         // 返回受影响的行数
-        rows = mysql_affected_rows(&mySQLClient);
+        
         cout << "Inserted "<< rows << " rows\n";
         return rows;
     } else {
-        cout << "Insert error " << mysql_errno(&mySQLClient) << "," << mysql_error(&mySQLClient) << endl;
+        cout << "Insert error " << mysql_errno(&mySQLClient) << endl;
         return -1;
     }
 }

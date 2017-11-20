@@ -34,7 +34,7 @@
 using namespace std;
 class Parting {
 public:
-    int id;
+    string id;
     bool state;
     double rate = 10;
     double time;
@@ -46,44 +46,46 @@ public:
         return time;
     }
     
-    void change_state() {
-        state = !state;
+    string change_state(bool state) {
         if (state == true) {
-            cout << "录入成功\n";
+            return "1";
         }
-        else if (state == false) {
-            cout << "结算成功\n";
-        }
+        else
+            return "0";
+        
     }
     
 };
 
 class Car: public Parting {
 public:
-    int id = Parting::id;
+    string id = Parting::id;
     string number;
     string model;
     
-    void get_id() {
+    string get_id() {
         cout << "请输入要存入的车位:";
         cin >> id;
+        return  id;
     }
     
-    void get_number() {
+    string get_number() {
         cout << "请输入车牌号:";
         cin >> number;
+        return number;
     }
     
-    void get_model() {
+    string get_model() {
         cout << "请输入车型:";
         cin >> model;
+        return model;
     }
     
 };
 
 int main()
 {
-    MySQLManager *mysql = new MySQLManager("123.207.183.132", "root", "rNc6NKKWWL", "mysql", (unsigned int)3306);
+    MySQLManager *mysql = new MySQLManager("123.207.183.132", "root", "rNc6NKKWWL", "parking", (unsigned int)3306);
     mysql->initConnection();
     if(mysql->getConnectionStatus())
         
@@ -104,7 +106,7 @@ int main()
         printf("%ld: %s\n", (long)t, s);
         
         
-        if(mysql->runSQLCommand("select username from parking.admin")) {
+        if(mysql->runSQLCommand("select username from admin")) {
             vector<vector<std::string> > result = mysql->getResult();
             for(auto & vec : result)
             {
@@ -131,7 +133,7 @@ int main()
                     }
             
         }
-            if(mysql->runSQLCommand("select password from parking.admin")) {
+            if(mysql->runSQLCommand("select password from admin")) {
                 vector<vector<std::string> > result = mysql->getResult();
                 for(auto & vec : result)
                 {
@@ -144,42 +146,50 @@ int main()
                             if(password.compare(admin_pw)==0)
                             {
                                 for (int k = 0; k < 100; k++) {
-                                    
-                                    cout << "Please input your choice:\n1.存车\n2.取车" << endl;
+                                    mysql->clearResult();
+                                    cout << "Please input your choice:\n1.存车\n2.取车\n3.退出系统" << endl;
                                     cin >> method;
                                     if (method == "1") {
-                                        double left[10] = {1,2,3,4,5,6,7,8,9,10};
-                                        cout << "剩余车位 ：";
-                                        for (int i = 0; i < 10; i++) {
-                                            if (i == 9) {
-                                                cout << left[i] << endl;
+                                        mysql->runSQLCommand("select park_id from park where park_state = 0");
+                                        cout << "剩余车位 ：\n";
+                                        vector<vector<std::string> > result = mysql->getResult();
+                                        for(auto & vec : result)
+                                        {
+                                            for(auto &str : vec) {
+                                                cout << str.c_str() << " ";
                                             }
-                                            else
-                                                cout << left[i] << ",";
+                                            cout << endl;
                                         }
-                                        
+                                        mysql->clearResult();
                                         Car car;
-                                        car.get_id();
-                                        car.get_time(t, s);
-                                        car.get_number();
-                                        car.get_model();
-                                        car.change_state();
-                                        
+                                        string id = car.get_id();
+                                        time_t time = car.get_time(t, s);
+                                        string number = car.get_number();
+                                        string model = car.get_model();
+                                        string state = car.change_state(true);
+                                        signed int req = mysql->updateData(id, state, number, model);
+                                        if(req==1){
+                                            cout<<"停车成功!"<<endl;
+                                        }
+                                        else
+                                            cout<<"停车失败请稍后重试。"<<endl;
                                     }
                                     
                                     else if (method == "2") {
                                         time_t entry_time = 1510630398;
-                                        
-                                        Parting space;
-                                        double last_time = space.get_time(t, s);
+                                        Car car;
+                                        string number = car.get_number();
+                                        string data = mysql->getData(number);
+                                        double last_time = car.get_time(t, s);
                                         double time_difference = last_time - entry_time;
-                                        double total = (time_difference/60) * space.rate;
-                                        
-                                        space.state = true;
-                                        space.change_state();
+                                        double total = (time_difference/60) * car.rate;
+                                        car.change_state(false);
                                         cout << "Total:" << total << endl;
                                     }
-                                    
+                                    else if (method == "3")
+                                    {
+                                        return 0;
+                                    }
                                     else
                                         cout << "Error" << endl;
                                 }
