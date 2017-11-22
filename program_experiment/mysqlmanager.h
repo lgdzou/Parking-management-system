@@ -39,7 +39,7 @@ class MySQLManager
      * @param sql:                sql语句
      */
     bool runSQLCommand(std::string sql);
-    string getData(std::string car_num);
+    string getData(std::string car_num,std::string data);
     /*
      * 更新数据库状态
      * @param park_id:        、 车位

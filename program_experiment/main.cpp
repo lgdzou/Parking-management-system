@@ -31,6 +31,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <vector>
+#include <ctime>
 using namespace std;
 class Parting {
 public:
@@ -50,8 +51,10 @@ public:
         if (state == true) {
             return "1";
         }
-        else
+        else if (state == false)
             return "0";
+        else
+            return 0;
         
     }
     
@@ -82,6 +85,14 @@ public:
     }
     
 };
+
+time_t change_time(const char* date,char* const format="%Y-%m-%d %H:%M:%S")
+{
+    struct tm tm;
+    strptime((const char*)date,format, &tm) ;
+    time_t ft=mktime(&tm);
+    return ft;
+}
 
 int main()
 {
@@ -163,7 +174,6 @@ int main()
                                         mysql->clearResult();
                                         Car car;
                                         string id = car.get_id();
-                                        time_t time = car.get_time(t, s);
                                         string number = car.get_number();
                                         string model = car.get_model();
                                         string state = car.change_state(true);
@@ -179,12 +189,54 @@ int main()
                                         time_t entry_time = 1510630398;
                                         Car car;
                                         string number = car.get_number();
-                                        string data = mysql->getData(number);
-                                        double last_time = car.get_time(t, s);
-                                        double time_difference = last_time - entry_time;
-                                        double total = (time_difference/60) * car.rate;
-                                        car.change_state(false);
-                                        cout << "Total:" << total << endl;
+                                        string state = car.change_state(false);
+
+                                        string time = mysql->getData(number, "time");
+                                        string id = mysql->getData(number, "park_id");
+                                        string last_time;
+                                        string park_rate;
+                                        double total;
+                                        
+                                        cout << "录入时间: " << time <<endl;
+                                        
+                                        signed int req = mysql->updateData(id, state, "''", "''");
+                                        if(req==1){
+                                            mysql->runSQLCommand("select time from park where park_id = " + id);
+                                            cout << "出库时间: ";
+                                            vector<vector<std::string> > result = mysql->getResult();
+                                            for(auto & vec : result)
+                                            {
+                                                for(auto &str : vec) {
+                                                    last_time = str.c_str();
+                                                    cout << str.c_str() << endl;
+                                                }
+                                            }
+                                            mysql->clearResult();
+                                            
+                                            mysql->runSQLCommand("select park_rate from park where park_id = " + id);
+                                            vector<vector<std::string> > rate = mysql->getResult();
+                                            for(auto & vec : rate)
+                                            {
+                                                for(auto &str : vec) {
+                                                    park_rate = str.c_str();
+                                                }
+                                            }
+
+                                            const char* entry_time = time.data();
+                                            const char* get_time = last_time.data();
+                                            
+                                            time_t first = change_time(entry_time);
+                                            time_t last = change_time(get_time);
+                                            time_t time_difference = (last - first)/60 ;
+                                            
+                                            double total = time_difference * 2;
+                                            cout<< "停车时常" << time_difference << " 分" << endl;
+                                            cout<< "停车费用" << total << " 元" << endl;
+                                            cout<< "结算成功!" <<endl;
+                                        }
+                                        else
+                                            cout<<"结算失败请稍后重试。"<<endl;
+                                        
                                     }
                                     else if (method == "3")
                                     {

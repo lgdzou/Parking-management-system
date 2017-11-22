@@ -153,29 +153,17 @@ bool MySQLManager::runSQLCommand(string sql)
     mysql_free_result(res);         //free result after you get the result
     return true;
 }
-string MySQLManager::getData(std::string car_num){
+string MySQLManager::getData(std::string car_num,std::string data){
     string sql_pre;
-    string park_id;
-    string park_rate;
-    string time;
-    string car_model;
-    sql_pre = "select * from park where car_number=" + car_num;
+    string fina_result;
+    sql_pre = "select "+ data +" from park where car_number=" + car_num;
     MySQLManager::runSQLCommand(sql_pre);
     vector<vector<std::string> > result = MySQLManager::getResult();
     for(auto & vec : result)
     {
-//        for(auto &str : vec) {
-//            data = str.c_str();
-//        }
-        park_id=vec[0];
-        MySQLManager::clearResult();
-        park_rate=vec[2];
-        MySQLManager::clearResult();
-        car_model=vec[4];
-        MySQLManager::clearResult();
-        time=vec[5];
+        fina_result = vec[0];
     }
-    return park_id,park_rate,car_model,time;
+    return fina_result;
 }
 signed int MySQLManager::updateData(std::string park_id,std::string park_state,std::string car_number,std::string car_model)
 {
@@ -194,9 +182,9 @@ signed int MySQLManager::insert(std::string sql)
         cout << "sql is null " << endl;
         return -1;
     }
-    int rows = -1;
+    
     int res = mysql_query(&mySQLClient, sql.c_str());
-    rows = mysql_affected_rows(&mySQLClient);
+    int rows = mysql_affected_rows(&mySQLClient);
     if(res >= 0 && rows>=1){
         // 返回受影响的行数
         
